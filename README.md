@@ -5,8 +5,8 @@
 
 ## Table of Content
 * Home - You're Already Here :)
-* [Initial Setup]
-* [Apps] - A brief rundown on all the different app and services that I run on my Home Lab 
+* [Initial Setup](https://github.com/RuhanShafi/HomeServer/blob/main/initsetup/README.md)
+* [Apps](https://github.com/RuhanShafi/HomeServer/blob/main/apps/README.md) - A brief rundown on all the different app and services that I run on my Home Lab 
 
 ## Hardware Used
  
