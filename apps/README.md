@@ -27,7 +27,7 @@
 
 #### Overseerr
 
-### Media Management - Back End
+### Media Management Back End
 
 #### Sonarr - Manages TV Shows & Animes
 

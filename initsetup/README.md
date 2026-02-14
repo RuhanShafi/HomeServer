@@ -37,7 +37,7 @@ systemctl restart systemd-logind
 Now you can safely shut the Laptop Lid without Proxmox suspending. Be sure to reload the Proxmox web page to confirm if the systemd configs were applied.
 
 #### Configuring Storage Solution using `MergerFS`
-
+##### Creating the different Partitions
 > [!NOTE]
 > This is the primary point where my setup diverges from TechHut's as I don't have the financial funds to drop like 10k on a Home lab... yet
 
@@ -115,3 +115,56 @@ mount -a
 df -h
 lsblk
 ```
+
+##### Making Storage Visible in Proxmox
+
+For Flash Storage (`/mnt/flash`):
+Via Web UI:
+
+1. Go to Datacenter → Storage → Add → Directory
+2. Fill in:
+  * ID: flash
+  * Directory: /mnt/flash
+  * Content: Select what you want (Disk image, Container, etc.)
+  * Nodes: Select your node
+
+Or if you prefer the terminal
+```bash
+pvesm add dir flash --path /mnt/flash --content images,vztmpl,iso,backup,rootdir
+```
+
+For Tank Storage (`/mnt/tank`):
+Via Web UI:
+1. Datacenter → Storage → Add → Directory
+2. Fill in:
+  * ID: tank
+  * Directory: /mnt/tank
+  * Content: Select what you want
+  * Nodes: Select your node
+
+Or if you prefer the terminal
+```bash
+pvesm add dir tank --path /mnt/tank --content images,vztmpl,iso,backup,rootdir
+```
+
+#### Ensure `IOMMU` is enabled
+
+Enable IOMMU on in grub configuration within _Node > Shell_.
+```bash
+nano /etc/default/grub
+```
+You will see the line with `GRUB_CMDLINE_LINUX_DEFAULT="quiet"`, all you need to do is add `intel_iommu=on` or `amd_iommu=on` depending on your system.
+```
+# Should look like this
+GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on"
+```
+![](https://raw.githubusercontent.com/TechHutTV/homelab/refs/heads/main/storage/2_proxmox-iommu.jpeg)
+
+Next run the following commands and reboot your system.
+```bash
+update-grub
+```
+Now check to make sure everything is enabled.
+```bash
+dmesg | grep -e DMAR -e IOMMU
+dmesg | grep 'remapping'
